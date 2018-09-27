@@ -8,7 +8,7 @@ namespace Y00 {
   [RequireComponent(typeof(SpriteRenderer))]
   [RequireComponent(typeof(Rigidbody2D))]
   [RequireComponent(typeof(Collider2D))]
-  public class Controllable : MonoBehaviour {
+  public class Creature : MonoBehaviour {
 
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
@@ -27,16 +27,13 @@ namespace Y00 {
       }
     }
 
+    public CreatureInfo creatureInfo;
+
     // Use this for initialization
     protected virtual void Start() {
       animator = GetComponent<Animator>();
       spriteRenderer = GetComponent<SpriteRenderer>();
       rigidbody2D = GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    protected virtual void Update() {
-
     }
 
     public virtual void InputAction(Action action) {
@@ -62,6 +59,10 @@ namespace Y00 {
       Vector2 realVelocity = speedFactor * baseVelocity;
       rigidbody2D.velocity = realVelocity;
     }
-  }
 
-}
+    public void BeDamaged(Damage damage) {
+
+    }
+
+  }
+}  // namespace Y00

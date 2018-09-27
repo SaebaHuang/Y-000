@@ -8,7 +8,7 @@ namespace Y00 {
   [RequireComponent(typeof(SpriteRenderer))]
   [RequireComponent(typeof(Rigidbody2D))]
   [RequireComponent(typeof(Collider2D))]
-  public class PlayerControllable : Controllable {
+  public class PlayerCreature : Creature {
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -16,14 +16,22 @@ namespace Y00 {
     /// </summary>
     protected override void Start() {
       base.Start();
-      GameManager.Instance.InputAction += InputAction;
+      try {
+        GameManager.Instance.InputAction += InputAction;
+      } catch (System.NullReferenceException e) {
+        Debug.LogWarning(e.Message);
+      }
     }
 
     /// <summary>
     /// This function is called when the MonoBehaviour will be destroyed.
     /// </summary>
     protected void OnDestroy() {
-      GameManager.Instance.InputAction -= InputAction;
+      try {
+        GameManager.Instance.InputAction += InputAction;
+      } catch (System.NullReferenceException) {
+        // Do nothing
+      }
     }
 
   }
