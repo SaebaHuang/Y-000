@@ -40,4 +40,4 @@ sysinfo.txt
 
 # Debug
 DebugResources*
-Scenes/DebugScene.unity
+Assets/Scenes/DebugScene.unity*
