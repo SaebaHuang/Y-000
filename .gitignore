@@ -37,3 +37,7 @@ sysinfo.txt
 
 # Editor
 .vscode/
+
+# Debug
+DebugResources*
+Scenes/DebugScene.unity
