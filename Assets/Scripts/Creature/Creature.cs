@@ -15,6 +15,9 @@ namespace Y00 {
     protected new Rigidbody2D rigidbody2D;
     public float speedFactor = 1.0f;
 
+    public delegate void OnDeadHandler(Creature creature, Damage damage);
+    public event OnDeadHandler OnDead;
+
     protected bool _facingRight;
     public bool facingRight {
       get {
@@ -36,7 +39,11 @@ namespace Y00 {
       rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
+    // TODO: Only for test
+    public GameObject attackObj;
+
     public virtual void InputAction(Action action) {
+      /* Move Begin */
       if (Mathf.Abs(action.horizontal) > 0f) {
         if (Input.GetKey("left shift")) {
           animator.SetFloat("Speed", 1.5f); // Run
@@ -58,11 +65,34 @@ namespace Y00 {
       }
       Vector2 realVelocity = speedFactor * baseVelocity;
       rigidbody2D.velocity = realVelocity;
+      /* Move End */
+
+      /* Attack Begin */
+      if (Input.GetButtonDown("Fire1")) {
+        // TODO: 当前的硬编码仅用于测试
+        var pos = transform.position;
+        var newObj = Instantiate(attackObj, pos, Quaternion.identity);
+        var rb = newObj.GetComponent<Rigidbody2D>();
+        float force = 100f;
+        if (facingRight) {
+          rb.AddForce(new Vector2(force, 0f));
+        } else {
+          rb.AddForce(new Vector2(-force, 0f));
+        }
+      }
+      /* Attack End */
     }
 
     public void BeDamaged(Damage damage) {
-
+      // TODO: 具体的伤害计算公式
+      if (creatureInfo.currentHp - damage.damage <= 0) {
+        creatureInfo.currentHp = 0;
+        if (OnDead != null) {
+          this.OnDead(this, damage);
+        }
+      } else {
+        creatureInfo.currentHp -= damage.damage;
+      }
     }
-
   }
 }  // namespace Y00

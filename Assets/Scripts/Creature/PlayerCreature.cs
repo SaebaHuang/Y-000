@@ -34,6 +34,10 @@ namespace Y00 {
       }
     }
 
+    public override void InputAction(Action action) {
+      base.InputAction(action);
+    }
+
   }
 
 }
