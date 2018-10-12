@@ -15,8 +15,19 @@ namespace Y00 {
     protected new Rigidbody2D rigidbody2D;
     public float speedFactor = 1.0f;
 
+    public Transform groundCheckTransform;
+
+    public float jumpForce = 300f;
+
     public delegate void OnDeadHandler(Creature creature, Damage damage);
     public event OnDeadHandler OnDead;
+
+    protected new Collider2D collider2D;
+    public Collider2D hitBoxCollider2D;
+
+    public int maxJumpTimes = 1;
+
+    public bool initFacingRight;
 
     protected bool _facingRight;
     public bool facingRight {
@@ -25,8 +36,18 @@ namespace Y00 {
       }
 
       set {
-        spriteRenderer.flipX = !value;
+        var scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+
         _facingRight = value;
+      }
+    }
+
+    public bool isGrounded {
+      get {
+        var grounded = Physics2D.Linecast(transform.position, groundCheckTransform.position, 1 << LayerMask.NameToLayer("Ground"));
+        return grounded;
       }
     }
 
@@ -37,6 +58,10 @@ namespace Y00 {
       animator = GetComponent<Animator>();
       spriteRenderer = GetComponent<SpriteRenderer>();
       rigidbody2D = GetComponent<Rigidbody2D>();
+
+      collider2D = GetComponent<Collider2D>();
+
+      _facingRight = initFacingRight;
     }
 
     // TODO: Only for test
@@ -44,9 +69,11 @@ namespace Y00 {
 
     public virtual void InputAction(Action action) {
       /* Move Begin */
+      float dashFactor = 1.0f;
       if (Mathf.Abs(action.horizontal) > 0f) {
         if (action.dash) {
           animator.SetFloat("Speed", 1.5f); // Run
+          dashFactor = 2.0f;
         } else {
           animator.SetFloat("Speed", 0.5f); // Walk
         }
@@ -55,15 +82,18 @@ namespace Y00 {
       }
       Vector2 baseVelocity = Vector2.zero;
       if (action.horizontal > 0f) {
-        facingRight = true;
+        if (!facingRight)
+          facingRight = true;
         baseVelocity.x = 1.0f;
       } else if (action.horizontal < 0f) {
-        facingRight = false;
+        if (facingRight)
+          facingRight = false;
         baseVelocity.x = -1.0f;
       } else {
         baseVelocity.x = 0f;
       }
-      Vector2 realVelocity = speedFactor * baseVelocity;
+      Vector2 realVelocity = speedFactor * baseVelocity * dashFactor;
+      realVelocity.y = rigidbody2D.velocity.y;
       rigidbody2D.velocity = realVelocity;
       /* Move End */
 
@@ -81,6 +111,12 @@ namespace Y00 {
         }
       }
       /* Attack End */
+
+      Debug.Log(isGrounded);
+      if (action.jump && isGrounded) {
+        animator.SetTrigger("Jump");
+        rigidbody2D.AddForce(new Vector2(0, jumpForce));
+      }
     }
 
     public void BeDamaged(Damage damage) {
