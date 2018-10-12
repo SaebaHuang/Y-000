@@ -45,7 +45,7 @@ namespace Y00 {
     public virtual void InputAction(Action action) {
       /* Move Begin */
       if (Mathf.Abs(action.horizontal) > 0f) {
-        if (Input.GetKey("left shift")) {
+        if (action.dash) {
           animator.SetFloat("Speed", 1.5f); // Run
         } else {
           animator.SetFloat("Speed", 0.5f); // Walk
@@ -68,7 +68,7 @@ namespace Y00 {
       /* Move End */
 
       /* Attack Begin */
-      if (Input.GetButtonDown("Fire1")) {
+      if (action.fire) {
         // TODO: 当前的硬编码仅用于测试
         var pos = transform.position;
         var newObj = Instantiate(attackObj, pos, Quaternion.identity);

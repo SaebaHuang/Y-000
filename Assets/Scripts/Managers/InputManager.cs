@@ -8,6 +8,8 @@ namespace Y00 {
       action.horizontal = Input.GetAxis("Horizontal");
       action.vertical = Input.GetAxis("Vertical");
       action.jump = Input.GetButtonDown("Jump");
+      action.fire = Input.GetButtonDown("Fire1");
+      action.dash = Input.GetButton("Dash");
       return action;
     }
   }
