@@ -9,6 +9,8 @@ namespace Y00 {
 
     [HideInInspector]
     public InputManager inputManager;
+    [HideInInspector]
+    public SkillManager skillManager;
 
     private static GameManager instance;
     public static GameManager Instance {
@@ -36,6 +38,8 @@ namespace Y00 {
     void Start() {
       DontDestroyOnLoad(gameObject);
       inputManager = InputManager.Instance;
+      skillManager = SkillManager.Instance;
+      skillManager.LoadFromJson("Jsons/skills");
     }
 
     // Update is called once per frame

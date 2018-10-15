@@ -190,12 +190,14 @@ MonoBehaviour:
   initFacingRight: 1
   creatureInfo:
     baseStats:
-      maxHp: 0
-      maxMp: 0
+      maxHp: 100
+      maxMp: 100
       armor: 0
-      attack: 0
-    currentHp: 0
-    currentMp: 0
+      attack: 10
+    currentHp: 100
+    currentMp: 100
+  skillIds:
+  - FireBallSkill
   attackObj: {fileID: 1505548029602758, guid: 29f47e9000436564e8f0610eb04246da, type: 2}
 --- !u!212 &212694577147347806
 SpriteRenderer:

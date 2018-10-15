@@ -53,6 +53,11 @@ namespace Y00 {
 
     public CreatureInfo creatureInfo;
 
+    public string[] skillIds;
+
+    [HideInInspector]
+    public BaseSkill[] skills;
+
     // Use this for initialization
     protected virtual void Start() {
       animator = GetComponent<Animator>();
@@ -62,6 +67,16 @@ namespace Y00 {
       collider2D = GetComponent<Collider2D>();
 
       _facingRight = initFacingRight;
+
+      // Load skills
+      if (skillIds != null && skillIds.Length > 0) {
+        skills = new BaseSkill[skillIds.Length];
+      } else {
+        skills = null;
+      }
+      for (int i = 0; i < skillIds.Length; ++i) {
+        skills[i] = SkillManager.Instance.GetSkillById(skillIds[i]);
+      }
     }
 
     // TODO: Only for test
@@ -98,21 +113,17 @@ namespace Y00 {
       /* Move End */
 
       /* Attack Begin */
-      if (action.fire) {
-        // TODO: 当前的硬编码仅用于测试
-        var pos = transform.position;
-        var newObj = Instantiate(attackObj, pos, Quaternion.identity);
-        var rb = newObj.GetComponent<Rigidbody2D>();
-        float force = 100f;
-        if (facingRight) {
-          rb.AddForce(new Vector2(force, 0f));
-        } else {
-          rb.AddForce(new Vector2(-force, 0f));
-        }
+      if (action.skill_0) {
+        skills[0].BeInvoked(this);
+      }
+      if (action.skill_1) {
+        skills[1].BeInvoked(this);
+      }
+      if (action.skill_2) {
+        skills[2].BeInvoked(this);
       }
       /* Attack End */
 
-      Debug.Log(isGrounded);
       if (action.jump && isGrounded) {
         animator.SetTrigger("Jump");
         rigidbody2D.AddForce(new Vector2(0, jumpForce));
@@ -127,6 +138,7 @@ namespace Y00 {
           this.OnDead(this, damage);
         }
       } else {
+        Debug.Log("BeDamaged " + damage.damage);
         creatureInfo.currentHp -= damage.damage;
       }
     }

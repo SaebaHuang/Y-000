@@ -4,8 +4,8 @@ namespace Y00 {
 public class Action {
   public float horizontal, vertical;
   public bool jump;
-  public bool fire;
   public bool dash;
+  public bool skill_0, skill_1, skill_2;
 }
 
 }  // namespace Y00
